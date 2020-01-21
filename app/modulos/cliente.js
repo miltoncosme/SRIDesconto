@@ -25,7 +25,7 @@ router.get('/', verifyJWT, (req, res) => {
 router.post('/', verifyJWT, (req, res) => {
     const { cnpj, cpf}  = req.user
     const pool  = new Pool (conn())    
-    var qry = `insert into cadastro(cpf,nome,email)values('${cpf}','${req.body.nome}','${req.body.email}','${cnpj}')`
+    var qry = `insert into cadastro(cpf,nome,email,empresa)values('${cpf}','${req.body.nome}','${req.body.email}','${cnpj}')`
     pool
     .query(qry)
     .then(() => {          
