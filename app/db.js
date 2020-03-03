@@ -3,7 +3,7 @@ const conn = function(){
     user: 'postgres',
     password: '740516',
     host: 'localhost',
-    database: `sridesconto`,    
+    database: `SRIdesconto`,    
     port: 5432}
 }
 

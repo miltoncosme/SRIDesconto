@@ -44,7 +44,7 @@ router.get('/:codproduto', verifyJWT, (req, res) => {
     })  
 })
   
-router.post('/', verifyJWT, (req, res) => {  
+router.post('/', verifyJWT, (req, res) => {
     const {usuario, cnpj} = req.user
     const pool  = new Pool(conn())     
     let dados = req.body
@@ -87,8 +87,27 @@ router.delete('/', verifyJWT, (req, res) => {
       .catch((err) => { 
         const e = err.message
         res.status(500).send({ auth: true, result: false, erro: e })
+      
       })
 })
+
+
+router.delete('/:codproduto', verifyJWT, (req, res) => {    
+  const {usuario, cnpj}  = req.user
+  const pool  = new Pool (conn())
+  const qryText = `delete from produtos where and cod_produto='${req.params.codproduto}' and empresa='${cnpj}'`
+  pool
+    .query(qryText)
+    .then(() => {
+      res.status(200).send({ auth: true, result: true })
+    })  
+    .catch((err) => { 
+      const e = err.message
+      res.status(500).send({ auth: true, result: false, erro: e })
+    
+    })
+})
+
 
 
 module.exports = router

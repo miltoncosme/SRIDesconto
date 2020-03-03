@@ -9,11 +9,21 @@ const { conn } = require('../db')
 router.get('/', verifyJWT, (req, res) => {
     const {cpf}  = req.user
     const pool  = new Pool (conn())    
-    var qry = `select * from cliproduto where cliente='${cpf}'`
+    var qry = `select a.codproduto
+    ,b.descricao 
+    ,b.preco
+    ,b.promocao
+    ,b.imagem
+    from cliproduto a ,produtos b
+    where a.cliente ='${cpf}'
+      and a.codproduto = b.cod_produto`;
     pool
     .query(qry)
     .then(con => {    
       const dados=con.rows
+      dados.forEach(data=>
+        data.imagem=String(data.imagem)
+      )
       res.status(200).send({ auth: true, result: true, dados })
     })
     .catch(err => {

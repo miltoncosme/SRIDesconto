@@ -22,6 +22,7 @@ app.use(function(req, res, next) {
   })
 
 app.post('/login', (req, res) => {   
+  console.log(req.body)
   const {usuario} = req.body;//'sri';
   const {senha} = req.body;//'740516';  
   const {cnpj} = req.body;//'740516';
