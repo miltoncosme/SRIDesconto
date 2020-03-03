@@ -36,10 +36,7 @@ app.post('/login', (req, res) => {
   } else {
     res.status(500).send({ auth: false, erro: 'Usuário não autorizado.' })      
   }
-})
-
-
-
+});
 
 app.use('/produto', require('./modulos/produto'))
 app.use('/cadastro', require('./modulos/cliente'))
