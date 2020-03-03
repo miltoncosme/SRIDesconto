@@ -50,7 +50,7 @@ app.use(helmet())
 app.use(express.json())
 app.use(cookieParser())
 var server = http.createServer(app);
-server.listen(process.env.PORT, ()=> console.log('Servidor ON'))
+server.listen(process.env.PORT, ()=> console.log(`Servidor ON. Port: ${process.env.PORT}.`))
 
 
 
