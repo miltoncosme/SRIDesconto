@@ -1,9 +1,9 @@
 const conn = function(){
     return {
-    user: 'postgres',
-    password: '740516',
+    user: process.env.USER_DB,
+    password: process.env.PASS_DB,
     host: 'localhost',
-    database: `SRIdesconto`,    
+    database: `SRIdesconto`,
     port: 5432}
 }
 

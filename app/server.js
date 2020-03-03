@@ -1,8 +1,6 @@
 const bodyParser = require('body-parser')
-const { verifyJWT } = require('./verifyJWT')
 var http = require('http')
 cors = require('cors')
-const { Pool } = require('pg')
 const express = require('express')
 const app = express();
 var cookieParser = require('cookie-parser')
@@ -10,7 +8,6 @@ var logger = require('morgan')
 const helmet = require('helmet')
 var jwt = require('jsonwebtoken')
 require('dotenv-safe').config()
-const { conn } = require('./db')
 app.options('*', cors())
 
 app.use(bodyParser.json())
@@ -53,7 +50,7 @@ app.use(helmet())
 app.use(express.json())
 app.use(cookieParser())
 var server = http.createServer(app);
-server.listen(3001, ()=> console.log('Servidor ON'))
+server.listen(process.env.PORT, ()=> console.log('Servidor ON'))
 
 
 
