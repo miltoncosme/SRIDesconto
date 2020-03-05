@@ -10,7 +10,7 @@ var jwt = require('jsonwebtoken')
 require('dotenv-safe').config()
 app.options('*', cors())
 
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '1mb', extended: true}));
 
 app.use(function(req, res, next) {  
   res.header("Access-Control-Allow-Origin", "*");

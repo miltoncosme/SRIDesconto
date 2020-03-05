@@ -1,9 +1,8 @@
-var express = require('express')
-var router = express.Router()
-var dateFormat = require('dateformat')
-const { verifyJWT } = require('../verifyJWT')
-const { Pool } = require('pg')
-const { conn } = require('../db')
+var express = require('express');
+var router = express.Router();
+const { verifyJWT } = require('../verifyJWT');
+const { Pool } = require('pg');
+const { conn } = require('../db');
 
 
 router.get('/', verifyJWT, (req, res) => {
