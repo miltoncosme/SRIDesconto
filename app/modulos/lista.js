@@ -7,7 +7,8 @@ const { conn } = require('../db');
 
 router.get('/', verifyJWT, (req, res) => {
     const {cpf}  = req.user
-    const pool  = new Pool (conn())    
+    const {usuario, cnpj}  = req.user
+    const pool  = new Pool (conn())  
     var qry = `select a.codproduto
     ,b.descricao 
     ,b.preco
@@ -15,6 +16,8 @@ router.get('/', verifyJWT, (req, res) => {
     ,b.imagem
     from cliproduto a ,produtos b
     where a.cliente ='${cpf}'
+      and a.empresa = '${cnpj}'
+      and a.empresa = b.empresa
       and a.codproduto = b.cod_produto`;
     pool
     .query(qry)
@@ -34,15 +37,18 @@ router.get('/', verifyJWT, (req, res) => {
   
 router.post('/', verifyJWT, (req, res) => {  
     const {cpf} = req.user
+    const {usuario,cnpj} = req.user
     const pool  = new Pool(conn())     
     let dados = req.body
-    
+        
     qryText = `insert into cliproduto(
       cliente,
-      codproduto
+      codproduto,
+      empresa
       ) values (
       '${cpf}'
       ,'${dados.cod_produto}'
+      ,'${cnpj}'
       )`;
     pool
     .query(qryText)
