@@ -3,7 +3,7 @@ const conn = function(){
     user: process.env.USER_DB,
     password: process.env.PASS_DB,
     host: 'localhost',
-    database: `SRIdesconto`,
+    database: process.env.NAME_DB,
     port: 5432}
 }
 

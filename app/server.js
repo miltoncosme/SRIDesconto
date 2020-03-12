@@ -1,14 +1,16 @@
-const bodyParser = require('body-parser')
-var http = require('http')
-cors = require('cors')
-const express = require('express')
+const bodyParser = require('body-parser');
+var http = require('http');
+cors = require('cors');
+const express = require('express');
 const app = express();
-var cookieParser = require('cookie-parser')
-var logger = require('morgan')
-const helmet = require('helmet')
-var jwt = require('jsonwebtoken')
-require('dotenv-safe').config()
-app.options('*', cors())
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+const helmet = require('helmet');
+var jwt = require('jsonwebtoken');
+require('dotenv-safe').config();
+app.options('*', cors());
+const { Pool } = require('pg');
+const { conn } = require('./db');
 
 app.use(bodyParser.json({limit: '1mb', extended: true}));
 
@@ -29,25 +31,32 @@ app.post('/login', (req, res) => {
       var token = jwt.sign({usuario, cnpj, cpf}, process.env.SECRET, {
         expiresIn: 3200
       })
-      res.status(200).send({ auth: true, token })      
+      const pool  = new Pool (conn());
+      pool.query(`select nome from cadastro where cpf='${cpf}' and empresa='${cnpj}'`)
+        .then((con)=>{          
+          res.status(200).send({ auth: true, token, cadastrado:(con.rows.length > 0) });
+        })
+        .catch((err)=>{
+          res.status(500).send({ auth: false, erro: `Houve falha na validação. Segui: ${err.message}` })
+        })
     } catch {
-      res.status(500).send({ auth: false, erro: 'Houve falha na validação.' })      
+      res.status(500).send({ auth: false, erro: 'Houve falha na validação.' });
     }
   } else {
-    res.status(500).send({ auth: false, erro: 'Usuário não autorizado.' })      
+    res.status(500).send({ auth: false, erro: 'Usuário não autorizado.' });
   }
 });
 
-app.use('/produto', require('./modulos/produto'))
-app.use('/cadastro', require('./modulos/cliente'))
-app.use('/lista', require('./modulos/lista'))
+app.use('/produto', require('./modulos/produto'));
+app.use('/cadastro', require('./modulos/cliente'));
+app.use('/lista', require('./modulos/lista'));
 
-app.use(logger('dev'))
-app.use(helmet())
-app.use(express.json())
-app.use(cookieParser())
+app.use(logger('dev'));
+app.use(helmet());
+app.use(express.json());
+app.use(cookieParser());
 var server = http.createServer(app);
-server.listen(process.env.PORT, ()=> console.log(`Servidor ON. Port: ${process.env.PORT}.`))
+server.listen(process.env.PORT, ()=> console.log(`Servidor ON. Port: ${process.env.PORT}.`));
 
 
 
