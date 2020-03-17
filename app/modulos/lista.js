@@ -37,7 +37,7 @@ router.get('/', verifyJWT, (req, res) => {
   
 router.post('/', verifyJWT, (req, res) => {  
     const {cpf} = req.user
-    const {usuario,cnpj} = req.user
+    const {cnpj} = req.user
     const pool  = new Pool(conn())     
     let dados = req.body
         
@@ -59,7 +59,28 @@ router.post('/', verifyJWT, (req, res) => {
       const e = err.message
       res.status(500).send({ auth: true, result: false, erro: e })
   })           
+});
+
+router.put('/:cpf/:cnpj/:codproduto/:usado', verifyJWT, (req, res) => {  
+  const {cpf, cnpj, codproduto, usado} = req.params;  
+  const pool  = new Pool(conn());
+
+  qryText = `update cliproduto
+              set usado=${usado} 
+             where cliente='${cpf}'
+              and empresa='${cnpj}' 
+              and codproduto='${codproduto}'`;
+  pool
+  .query(qryText)
+  .then(() => {
+    res.status(200).send({ auth: true, result: true })      
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })
+})           
 })
+
 
 
 router.delete('/:codproduto', verifyJWT, (req, res) => {    
