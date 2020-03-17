@@ -6,8 +6,7 @@ const { conn } = require('../db');
 
 
 router.get('/', verifyJWT, (req, res) => {
-    const {cpf}  = req.user
-    const {usuario, cnpj}  = req.user
+    const {cpf, cnpj}  = req.user    
     const pool  = new Pool (conn())  
     var qry = `select a.codproduto
     ,b.descricao 
@@ -18,7 +17,8 @@ router.get('/', verifyJWT, (req, res) => {
     where a.cliente ='${cpf}'
       and a.empresa = '${cnpj}'
       and a.empresa = b.empresa
-      and a.codproduto = b.cod_produto`;
+      and a.codproduto = b.cod_produto
+      and b.validade >= current_date`;
     pool
     .query(qry)
     .then(con => {    

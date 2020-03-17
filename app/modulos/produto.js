@@ -46,7 +46,7 @@ router.get('/:codproduto', verifyJWT, (req, res) => {
 router.post('/', verifyJWT, (req, res) => {
     const {usuario, cnpj} = req.user
     const pool  = new Pool(conn())     
-    let dados = req.body
+    let dados = req.body;
     
     qryText = `insert into produtos(
       empresa,
@@ -54,14 +54,16 @@ router.post('/', verifyJWT, (req, res) => {
       descricao,
       preco,
       promocao,
-      imagem
+      imagem,
+      validade
       ) values (
       '${cnpj}'
       ,'${dados.cod_produto}'
       ,'${dados.descricao}'
       ,${dados.preco}
       ,${dados.promocao}
-      ,'${String(dados.imagem)}')`;
+      ,'${String(dados.imagem)}'
+      ,'${String(dados.validade)}')`;
     pool
     .query(qryText)
     .then(() => {
