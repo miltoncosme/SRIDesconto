@@ -33,13 +33,41 @@ router.get('/', verifyJWT, (req, res) => {
       res.status(500).send({ auth: true, result: false, erro: e })      
     })  
 })
+
+router.get('/semimagem', verifyJWT, (req, res) => {
+  const {cpf, cnpj}  = req.user    
+  const pool  = new Pool (conn())  
+  var qry = `select a.codproduto
+  ,b.descricao 
+  ,b.preco
+  ,b.promocao
+  from cliproduto a ,produtos b
+  where a.cliente ='${cpf}'
+    and a.empresa = '${cnpj}'
+    and a.empresa = b.empresa
+    and a.codproduto = b.cod_produto
+    and b.validade >= current_date`;
+  pool
+  .query(qry)
+  .then(con => {    
+    const dados=con.rows
+    dados.forEach(data=>
+      data.imagem=String(data.imagem)
+    )
+    res.status(200).send({ auth: true, result: true, dados })
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })      
+  })  
+})
   
   
 router.post('/', verifyJWT, (req, res) => {  
-    const {cpf} = req.user
-    const {cnpj} = req.user
-    const pool  = new Pool(conn())     
-    let dados = req.body
+    const {cpf} = req.user;
+    const {cnpj} = req.user;
+    const pool  = new Pool(conn());
+    let dados = req.body;
         
     qryText = `insert into cliproduto(
       cliente,
