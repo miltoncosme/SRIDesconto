@@ -24,7 +24,8 @@
     "nodemon": "^2.0.2",
     "pg": "^7.12.1",
     "pg-promise": "^9.2.1",
-    "pg-sync": "^0.2.0"
+    "pg-sync": "^0.2.0",
+    "save": "^2.4.0"
   },
   "devDependencies": {},
   "keywords": [],

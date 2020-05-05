@@ -25,13 +25,14 @@ router.get('/', verifyJWT, (req, res) => {
 })
 
 router.post('/', verifyJWT, (req, res) => {
+    
     const { cnpj, cpf}  = req.user;
-    if (isCpf(cpf)===false){
+    /*if (isCpf(cpf)===false){
       res.status(500).send({ auth: true, result: false, erro: 'CPF inválido.' });
       return;
-    }
+    } */ 
     const pool  = new Pool (conn())    
-    var qry = `insert into cadastro(cpf,nome,email,empresa)values('${cpf}','${req.body.nome}','${req.body.email}','${cnpj}')`
+    var qry = `insert into cadastro(cpf,nome,email,empresa,endereco,fone,sobrenome)values('${cpf}','${req.body.nome}','${req.body.email}','${cnpj}','${req.body.endereco}','${req.body.fone}','${req.body.sobrenome}')`
     pool
     .query(qry)
     .then(() => {          

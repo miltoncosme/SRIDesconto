@@ -21,7 +21,7 @@ app.use(function(req, res, next) {
   })
 
 app.post('/login', (req, res) => {   
-  console.log(req.body)
+  
   const {usuario} = req.body;//'sri';
   const {senha} = req.body;//'740516';  
   const {cnpj} = req.body;//'740516';
@@ -50,6 +50,7 @@ app.post('/login', (req, res) => {
 app.use('/produto', require('./modulos/produto'));
 app.use('/cadastro', require('./modulos/cliente'));
 app.use('/lista', require('./modulos/lista'));
+app.use('/pedidos', require('./modulos/pedidos'));
 
 app.use(logger('dev'));
 app.use(helmet());

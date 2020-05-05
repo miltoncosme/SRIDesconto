@@ -13,6 +13,7 @@ router.get('/', verifyJWT, (req, res) => {
     ,b.preco
     ,b.promocao
     ,b.imagem
+    ,a.qtd
     from cliproduto a ,produtos b
     where a.cliente ='${cpf}'
       and a.empresa = '${cnpj}'
@@ -67,16 +68,17 @@ router.post('/', verifyJWT, (req, res) => {
     const {cpf} = req.user;
     const {cnpj} = req.user;
     const pool  = new Pool(conn());
-    let dados = req.body;
-        
+    let dados = req.body;        
     qryText = `insert into cliproduto(
       cliente,
       codproduto,
-      empresa
+      empresa,
+      qtd
       ) values (
       '${cpf}'
       ,'${dados.cod_produto}'
       ,'${cnpj}'
+      ,'${dados.qtd}'
       )`;
     pool
     .query(qryText)
