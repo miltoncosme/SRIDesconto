@@ -60,9 +60,7 @@ router.get('/itens/:uid', verifyJWT, (req, res) => {
 
 router.get('/lista', verifyJWT, (req, res) => {
   const {cpf,cnpj}  = req.user
-  
-  console.log(cpf+' '+cnpj)
-  const pool  = new Pool (conn())    
+   const pool  = new Pool (conn())    
   var qry = `select * from pedido where empresa = '${cnpj}'`
   pool
   .query(qry)
@@ -94,7 +92,7 @@ router.post('/', verifyJWT, (req, res) => {
               
                 await pool.query(`insert into itens_pedido(id_pedido,codigo,descricao,qtd,valor)values(${id},'${itens[i].codigo}','${itens[i].descricao}',${itens[i].qtd},${itens[i].valor})`)                
               }
-              res.status(200).send({ auth: true, result: true });               
+              res.status(200).send({ auth: true, result: true,id:id });               
             } catch (error) {
               res.status(500).send({ auth: true, result: false, erro: error.message });              
             }
