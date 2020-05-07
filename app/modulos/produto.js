@@ -63,8 +63,8 @@ router.post('/', verifyJWT, (req, res) => {
       ,${dados.preco}
       ,${dados.promocao}
       ,'${String(dados.imagem)}'
-      ,to_date('${String(dados.validade)}','DD.MM.YYYY'))`;
-    console.log(qryText);
+      ,to_date('${String(dados.validade)}','YYYY.MM.DD'))`;
+
     pool
     .query(qryText)
     .then(() => {
