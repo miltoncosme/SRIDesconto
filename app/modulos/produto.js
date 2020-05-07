@@ -44,7 +44,7 @@ router.get('/:codproduto', verifyJWT, (req, res) => {
 })
   
 router.post('/', verifyJWT, (req, res) => {
-    const {usuario, cnpj} = req.user
+    const {cnpj} = req.user
     const pool  = new Pool(conn())     
     let dados = req.body;
     
@@ -63,7 +63,7 @@ router.post('/', verifyJWT, (req, res) => {
       ,${dados.preco}
       ,${dados.promocao}
       ,'${String(dados.imagem)}'
-      ,'${String(dados.validade)}')`;
+      ,do_date('${String(dados.validade)}','DD.MM.YYYY'))`;
     pool
     .query(qryText)
     .then(() => {
