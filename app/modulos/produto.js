@@ -64,6 +64,7 @@ router.post('/', verifyJWT, (req, res) => {
       ,${dados.promocao}
       ,'${String(dados.imagem)}'
       ,do_date('${String(dados.validade)}','DD.MM.YYYY'))`;
+    console.log(qryText);
     pool
     .query(qryText)
     .then(() => {
@@ -71,6 +72,7 @@ router.post('/', verifyJWT, (req, res) => {
     })
     .catch(err => {
       const e = err.message
+      console.log(e);
       res.status(500).send({ auth: true, result: false, erro: e })
   })           
 })
