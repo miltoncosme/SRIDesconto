@@ -60,8 +60,21 @@ router.get('/itens/:uid', verifyJWT, (req, res) => {
 
 router.get('/lista', verifyJWT, (req, res) => {
   const {cpf,cnpj}  = req.user
-   const pool  = new Pool (conn())    
-  var qry = `select * from pedido where empresa = '${cnpj}'`
+    const pool  = new Pool (conn())    
+  var qry = `SELECT a.id_pedido
+            ,a.total
+            ,a.status
+            ,a.empresa
+            ,a.cliente
+            ,a.data_pedido
+            ,b.cpf
+            ,b.nome
+            ,b.sobrenome
+            ,b.endereco
+            ,b.fone
+            FROM PEDIDO A, CADASTRO B
+            WHERE A.cliente = b.cpf
+            and a.empresa = '${cnpj}'`
   pool
   .query(qry)
   .then(con => {    
