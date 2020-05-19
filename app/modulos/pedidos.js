@@ -73,6 +73,7 @@ router.get('/lista', verifyJWT, (req, res) => {
             ,b.sobrenome
             ,b.endereco
             ,b.fone
+            ,a.origem
             FROM PEDIDO A, CADASTRO B
             WHERE A.cliente = b.cpf
             and a.empresa = '${cnpj}'`
@@ -92,8 +93,8 @@ router.post('/', verifyJWT, (req, res) => {
     const { cnpj, cpf}  = req.user;
     
     const pool  = new Pool (conn())    
-    var qry = `insert into pedido (data_pedido,total,status,empresa,cliente,entrega)
-               values('${req.body.data_pedido}','${req.body.total}','${req.body.status}','${cnpj}','${cpf}',${req.body.entrega})
+    var qry = `insert into pedido (data_pedido,total,status,empresa,cliente,entrega,origem)
+               values('${req.body.data_pedido}','${req.body.total}','${req.body.status}','${cnpj}','${cpf}',${req.body.entrega},0)
                RETURNING id_pedido `
     pool
     .query(qry)

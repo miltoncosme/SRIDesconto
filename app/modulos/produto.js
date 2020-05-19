@@ -23,6 +23,22 @@ router.get('/', verifyJWT, (req, res) => {
       res.status(500).send({ auth: true, result: false, erro: e })      
     })  
 })
+
+router.get('/msg', verifyJWT, (req, res) => {
+  const {usuario, cnpj}  = req.user
+  const pool  = new Pool (conn())    
+  var qry = `select * from menssagens where empresa='${cnpj}'`
+  pool
+  .query(qry)
+  .then(con => {    
+    const dados=con.rows
+    res.status(200).send({ auth: true, result: true, dados })
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })      
+  })  
+})
   
 router.get('/:codproduto', verifyJWT, (req, res) => { 
     const {usuario, cnpj}  = req.user
@@ -77,6 +93,31 @@ router.post('/', verifyJWT, (req, res) => {
   })           
 })
 
+
+router.post('/msg', verifyJWT, (req, res) => {
+  const {cnpj} = req.user
+  const pool  = new Pool(conn())     
+  let dados = req.body;
+  
+  qryText = `insert into menssagens(
+    empresa,
+    msg
+    ) values (
+    '${cnpj}'
+    ,'${dados.menssagem}'
+    )`;
+
+  pool
+  .query(qryText)
+  .then(() => {
+    res.status(200).send({ auth: true, result: true })      
+  })
+  .catch(err => {
+    const e = err.message
+    console.log(e);
+    res.status(500).send({ auth: true, result: false, erro: e })
+})           
+})
 
 router.delete('/', verifyJWT, (req, res) => {    
     const {usuario, cnpj}  = req.user
