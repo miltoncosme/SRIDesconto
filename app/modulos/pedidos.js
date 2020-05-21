@@ -73,6 +73,7 @@ router.get('/lista', verifyJWT, (req, res) => {
             ,b.sobrenome
             ,b.endereco
             ,b.fone
+            ,b.email
             ,a.origem
             FROM PEDIDO A, CADASTRO B
             WHERE A.cliente = b.cpf
