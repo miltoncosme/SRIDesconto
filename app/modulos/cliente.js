@@ -32,7 +32,12 @@ router.post('/', verifyJWT, (req, res) => {
       return;
     } */ 
     const pool  = new Pool (conn())    
-    var qry = `insert into cadastro(cpf,nome,email,empresa,endereco,fone,sobrenome)values('${cpf}','${req.body.nome}','${req.body.email}','${cnpj}','${req.body.endereco}','${req.body.fone}','${req.body.sobrenome}')`
+    var qry = `INSERT INTO CADASTRO (cpf,nome,email,empresa,endereco,fone,sobrenome,numero,cep,bairro,cidade)
+    VALUES
+    ('${cpf}','${req.body.nome}','${req.body.email}','${cnpj}','${req.body.endereco}','${req.body.fone}','${req.body.sobrenome}','${req.body.numero}','${req.body.cep}','${req.body.bairro}','${req.body.cidade}')
+    ON CONFLICT (CPF,empresa) 
+    DO 
+       UPDATE SET nome = '${req.body.nome}',email = '${req.body.email}' ,endereco = '${req.body.endereco}',fone = '${req.body.fone}',sobrenome = '${req.body.sobrenome}',numero = '${req.body.numero}',cep = '${req.body.cep}',bairro = '${req.body.bairro}',cidade = '${req.body.cidade}'`  
     pool
     .query(qry)
     .then(() => {          
