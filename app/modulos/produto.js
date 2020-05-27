@@ -58,6 +58,32 @@ router.get('/:codproduto', verifyJWT, (req, res) => {
       res.status(500).send({ auth: true, result: false, erro: e })
     })  
 })
+
+router.post('/msg', verifyJWT, (req, res) => {
+  const {cnpj} = req.user
+  const pool  = new Pool(conn())     
+  let dados = req.body;
+  
+  qryText = `insert into menssagens(
+    empresa,
+    msg,
+    tipo
+    ) values (
+    '${cnpj}'
+    ,'${dados.menssagem}'
+    ,'${dados.tipo}')`;
+
+  pool
+  .query(qryText)
+  .then(() => {
+    res.status(200).send({ auth: true, result: true })      
+  })
+  .catch(err => {
+    const e = err.message
+    console.log(e);
+    res.status(500).send({ auth: true, result: false, erro: e })
+})           
+})
   
 router.post('/', verifyJWT, (req, res) => {
     const {cnpj} = req.user
@@ -94,30 +120,6 @@ router.post('/', verifyJWT, (req, res) => {
 })
 
 
-router.post('/msg', verifyJWT, (req, res) => {
-  const {cnpj} = req.user
-  const pool  = new Pool(conn())     
-  let dados = req.body;
-  
-  qryText = `insert into menssagens(
-    empresa,
-    msg
-    ) values (
-    '${cnpj}'
-    ,'${dados.menssagem}'
-    )`;
-
-  pool
-  .query(qryText)
-  .then(() => {
-    res.status(200).send({ auth: true, result: true })      
-  })
-  .catch(err => {
-    const e = err.message
-    console.log(e);
-    res.status(500).send({ auth: true, result: false, erro: e })
-})           
-})
 
 router.delete('/', verifyJWT, (req, res) => {    
     const {usuario, cnpj}  = req.user

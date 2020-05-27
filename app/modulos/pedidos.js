@@ -23,6 +23,21 @@ router.get('/', verifyJWT, (req, res) => {
 }
 )
 
+router.put('/pagamento/:uid', verifyJWT, (req, res) => {
+  const {idempresa, id, dbclient} = req.user;
+  const pool  = new Pool (conn(dbclient));  
+  qryText = `update pedido set autorizacao_pagamento='${req.body.idpagamento}'
+            where id_pedido=${req.params.uid}`
+  pool
+    .query(qryText)
+    .then(() => {
+      res.status(200).send({ auth:true, result:true })      
+    })
+    .catch(err=>{
+      res.status(800).send({ auth:true, result:false, erro:err.message })
+    })
+})
+
 router.put('/:uid/:ustatus', verifyJWT, (req, res) => {
   const {idempresa, id, dbclient} = req.user;
   const pool  = new Pool (conn(dbclient));  
@@ -72,9 +87,14 @@ router.get('/lista', verifyJWT, (req, res) => {
             ,b.nome
             ,b.sobrenome
             ,b.endereco
+            ,b.numero
+            ,b.bairro            
+            ,b.cidade            
+            ,b.cep            
             ,b.fone
             ,b.email
             ,a.origem
+            ,a.autorizacao_pagamento
             FROM PEDIDO A, CADASTRO B
             WHERE A.cliente = b.cpf
             and a.empresa = '${cnpj}'`

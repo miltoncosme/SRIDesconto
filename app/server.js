@@ -51,6 +51,7 @@ app.use('/produto', require('./modulos/produto'));
 app.use('/cadastro', require('./modulos/cliente'));
 app.use('/lista', require('./modulos/lista'));
 app.use('/pedidos', require('./modulos/pedidos'));
+app.use('/menssagens', require('./modulos/menssagens'));
 
 app.use(logger('dev'));
 app.use(helmet());
