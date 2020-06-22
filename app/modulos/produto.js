@@ -4,6 +4,8 @@ const { verifyJWT } = require('../verifyJWT');
 const { Pool } = require('pg');
 const { conn } = require('../db');
 
+const nPag = 5;
+
 
 router.get('/', verifyJWT, (req, res) => {
     const {usuario, cnpj}  = req.user
@@ -39,7 +41,24 @@ router.get('/msg', verifyJWT, (req, res) => {
     res.status(500).send({ auth: true, result: false, erro: e })      
   })  
 })
-  
+
+router.get('/paginas', verifyJWT, (req, res) => {
+  const {usuario, cnpj}  = req.user
+  const pool  = new Pool (conn())    
+  var qry = `select (count(*)/${nPag})+coalesce((select 1 where mod((select count(*) from produtos where empresa='${cnpj}'),${nPag}) > 0),0) as qtd
+            from produtos where empresa='${cnpj}'`;
+  pool
+  .query(qry)
+  .then(con => {    
+    const dados=con.rows[0];    
+    res.status(200).send({ auth: true, result: true, dados })
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })      
+  })  
+})
+ 
 router.get('/:codproduto', verifyJWT, (req, res) => { 
     const {usuario, cnpj}  = req.user
     const pool  = new Pool (conn())     
@@ -58,6 +77,32 @@ router.get('/:codproduto', verifyJWT, (req, res) => {
       res.status(500).send({ auth: true, result: false, erro: e })
     })  
 })
+
+router.get('/pagina/:upag', verifyJWT, (req, res, next) => {  
+  const pag = Number(req.params.upag);
+  const {cnpj}  = req.user;
+  const pool  = new Pool (conn());
+  var qry =  `select b.* from 
+               (select row_number() over (order by a.descricao ) as linha,
+                  a.*              
+               from produtos a where a.empresa='${cnpj}' order by a.descricao) b
+              where b.linha between ${(nPag*pag)-(nPag-1)} and ${nPag*pag}`
+  pool
+  .query(qry)
+  .then(con => {    
+    const dados=con.rows;
+    res.status(200).send({ auth: true, result: true, dados })
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })      
+  })  
+})
+
+
+
+
+
 
 router.post('/msg', verifyJWT, (req, res) => {
   const {cnpj} = req.user
