@@ -89,14 +89,17 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
               where b.linha between ${(nPag*pag)-(nPag-1)} and ${nPag*pag}`
   pool
   .query(qry)
-  .then(con => {    
-    const dados=con.rows;
-    res.status(200).send({ auth: true, result: true, dados })
-  })
-  .catch(err => {
-    const e = err.message
-    res.status(500).send({ auth: true, result: false, erro: e })      
-  })  
+    .then(con => {    
+      const dados=con.rows
+      dados.forEach(data=>
+        data.imagem=String(data.imagem)
+      )
+      res.status(200).send({ auth: true, result: true, dados })
+    })
+    .catch(err => {
+      const e = err.message
+      res.status(500).send({ auth: true, result: false, erro: e })      
+    })  
 })
 
 
