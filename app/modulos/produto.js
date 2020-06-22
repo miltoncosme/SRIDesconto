@@ -4,7 +4,7 @@ const { verifyJWT } = require('../verifyJWT');
 const { Pool } = require('pg');
 const { conn } = require('../db');
 
-const nPag = 5;
+const nPag = 10;
 
 
 router.get('/', verifyJWT, (req, res) => {
