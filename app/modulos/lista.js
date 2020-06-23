@@ -79,8 +79,10 @@ router.post('/', verifyJWT, (req, res) => {
       ,'${dados.cod_produto}'
       ,'${cnpj}'
       ,'${dados.qtd}'
-      )`;
-    pool
+      ) ON CONFLICT (cliente,empresa,codproduto)
+	  DO 
+       UPDATE SET qtd = cliproduto.qtd + '${dados.qtd}'`;
+	  pool
     .query(qryText)
     .then(() => {
       res.status(200).send({ auth: true, result: true })      
