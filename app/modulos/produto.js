@@ -78,6 +78,24 @@ router.get('/:codproduto', verifyJWT, (req, res) => {
     })  
 })
 
+
+router.get('/descricao/:descBusca', verifyJWT, (req, res) => {
+  const {usuario, cnpj}  = req.user
+  const pool  = new Pool (conn())    
+  qry = `select cod_produto,descricao from produtos where descricao like '%${req.params.descBusca}%' and empresa='${cnpj}'` 
+  pool
+  .query(qry)
+  .then(con => {    
+    const dados=con.rows    
+    res.status(200).send({ auth: true, result: true, dados })
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })      
+  })  
+})
+
+
 router.get('/pagina/:upag', verifyJWT, (req, res, next) => {  
   const pag = Number(req.params.upag);
   const {cnpj}  = req.user;
