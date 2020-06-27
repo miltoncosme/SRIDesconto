@@ -163,7 +163,9 @@ router.post('/', verifyJWT, (req, res) => {
       preco,
       promocao,
       imagem,
-      validade
+      validade,
+      imagem_grande,
+      balanca
       ) values (
       '${cnpj}'
       ,'${dados.cod_produto}'
@@ -171,8 +173,9 @@ router.post('/', verifyJWT, (req, res) => {
       ,${dados.preco}
       ,${dados.promocao}
       ,'${String(dados.imagem)}'
-      ,to_date('${String(dados.validade)}','YYYY.MM.DD'))`;
-
+      ,to_date('${String(dados.validade)}','YYYY.MM.DD')
+      ,'${String(dados.imagem_grande)}'
+      ,${dados.balanca})`;
     pool
     .query(qryText)
     .then(() => {
