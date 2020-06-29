@@ -175,7 +175,7 @@ router.post('/', verifyJWT, (req, res) => {
       ,'${String(dados.imagem)}'
       ,to_date('${String(dados.validade)}','YYYY.MM.DD')
       ,'${String(dados.imagem_grande)}'
-      ,${dados.balanca})`;
+      ,'${dados.balanca}')`;
     pool
     .query(qryText)
     .then(() => {
