@@ -95,6 +95,17 @@ router.get('/lista', verifyJWT, (req, res) => {
             ,b.email
             ,a.origem
             ,a.autorizacao_pagamento
+            ,a.forma_pagamento
+            ,endereco
+            ,a.numero
+            ,a.cep
+            ,a.bairro
+            ,a.cidade
+            ,a.nome_favorecido
+            ,a.sobrenome_favorecida
+            ,a.fone_favorecido
+            ,a.obs
+            ,a.presente
             FROM PEDIDO A, CADASTRO B
             WHERE A.cliente = b.cpf
             and a.empresa = '${cnpj}'`
@@ -114,8 +125,10 @@ router.post('/', verifyJWT, (req, res) => {
     const { cnpj, cpf}  = req.user;
     
     const pool  = new Pool (conn())    
-    var qry = `insert into pedido (data_pedido,total,status,empresa,cliente,entrega,origem)
-               values('${req.body.data_pedido}','${req.body.total}','${req.body.status}','${cnpj}','${cpf}',${req.body.entrega},0)
+    var qry = `insert into pedido (data_pedido,total,status,empresa,cliente,entrega,origem,forma_pagamento,endereco,numero,cep,bairro,cidade,nome_favorecido,sobrenome_favorecida,fone_favorecido,obs,presente)
+               values('${req.body.data_pedido}','${req.body.total}','${req.body.status}','${cnpj}','${cpf}',${req.body.entrega},0,
+               '${req.body.forma_pagamento}','${req.body.endereco}','${req.body.numero}','${req.body.cep}','${req.body.bairro}',
+               '${req.body.cidade}','${req.body.nome_favorecido}','${req.body.sobrenome_favorecida}','${req.body.fone_favorecido}','${req.body.obs}','${req.body.presente}')
                RETURNING id_pedido `
     pool
     .query(qry)
