@@ -9,9 +9,9 @@ const { conn } = require('../db');
 
 
 router.get('/', verifyJWT, (req, res) => {
-    const {cpf}  = req.user
+    const {cnpj,cpf}  = req.user
     const pool  = new Pool (conn())    
-    var qry = `select * from cadastro where cpf='${cpf}'`
+    var qry = `select * from cadastro where cpf='${cpf}' and empresa='${cnpj}'`
     pool
     .query(qry)
     .then(con => {    
