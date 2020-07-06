@@ -96,7 +96,7 @@ router.get('/lista', verifyJWT, (req, res) => {
             ,a.origem
             ,a.autorizacao_pagamento
             ,a.forma_pagamento
-            ,endereco
+            ,b.endereco
             ,a.numero
             ,a.cep
             ,a.bairro
