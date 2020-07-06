@@ -76,7 +76,7 @@ router.get('/itens/:uid', verifyJWT, (req, res) => {
 router.get('/lista', verifyJWT, (req, res) => {
   const {cpf,cnpj}  = req.user
     const pool  = new Pool (conn())    
-  var qry = `SELECT a.id_pedido
+  var qry = `SELECT distinct a.id_pedido
             ,a.total
             ,a.status
             ,a.empresa
