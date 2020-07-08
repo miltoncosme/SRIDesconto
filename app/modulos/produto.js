@@ -68,8 +68,10 @@ router.get('/:codproduto', verifyJWT, (req, res) => {
     .then(con => {    
       const dados=con.rows
       dados.forEach(data=>
-        data.imagem=String(data.imagem)
+        data.imagem_grande=String(data.imagem_grande)
+
       )
+
       res.status(200).send({ auth: true, result: true, dados })
     })
     .catch(err => {
