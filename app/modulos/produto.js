@@ -102,11 +102,18 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
   const pag = Number(req.params.upag);
   const {cnpj}  = req.user;
   const pool  = new Pool (conn());
-  var qry =  `select b.* from 
+  var qry =  `select b.cod_produto
+                    ,b.descricao
+                    ,b.preco
+                    ,b.promocao
+                    ,b.imagem
+                    ,b.validade
+                     from 
                (select row_number() over (order by a.descricao ) as linha,
                   a.*              
                from produtos a where a.empresa='${cnpj}' order by a.descricao) b
-              where b.linha between ${(nPag*pag)-(nPag-1)} and ${nPag*pag}`
+              where b.linha between ${(nPag*pag)-(nPag-1)} and ${nPag*pag}
+              and validade > current_date`
   pool
   .query(qry)
     .then(con => {    
