@@ -108,6 +108,7 @@ router.get('/lista', verifyJWT, (req, res) => {
             ,a.presente
             FROM PEDIDO A, CADASTRO B
             WHERE A.cliente = b.cpf
+            and a.empresa = b.empresa 
             and a.empresa = '${cnpj}'`
   pool
   .query(qry)
