@@ -47,6 +47,7 @@ node_modules/
 jspm_packages/
 frontend/
 frontend-/
+client/
 
 
 # TypeScript v1 declaration files
