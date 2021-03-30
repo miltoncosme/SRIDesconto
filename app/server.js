@@ -1,4 +1,4 @@
-const bodyParser = require('body-parser');
+//const bodyParser = require('body-parser');
 var http = require('http');
 cors = require('cors');
 const express = require('express');
@@ -12,16 +12,16 @@ app.options('*', cors());
 const { Pool } = require('pg');
 const { conn } = require('./db');
 
-app.use(bodyParser.json({limit: '1mb', extended: true}));
+app.use(express.json({limit: '1mb', extended: true}));
 
 app.use(function(req, res, next) {  
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
-  })
+})
 
-app.post('/login', (req, res) => {   
-  
+app.post('/login', async (req, res) => {   
+ 
   const {usuario} = req.body;//'sri';
   const {senha} = req.body;//'740516';  
   const {cnpj} = req.body;//'740516';
@@ -32,13 +32,12 @@ app.post('/login', (req, res) => {
         expiresIn: 3200
       })
       const pool  = new Pool (conn());
-      pool.query(`select nome from cadastro where cpf='${cpf}' and empresa='${cnpj}'`)
-        .then((con)=>{          
-          res.status(200).send({ auth: true, token, cadastrado:(con.rows.length > 0) });
-        })
-        .catch((err)=>{
-          res.status(500).send({ auth: false, erro: `Houve falha na validação. Segui: ${err.message}` })
-        })
+      try {
+        const con = await pool.query(`select nome from cadastro where cpf='${cpf}' and empresa='${cnpj}'`)
+        return res.status(200).send({ auth: true, token, cadastrado:(con.rows.length > 0) });        
+      } catch (err) {
+        res.status(500).send({ auth: false, erro: `Houve falha na validação. Segui: ${err.message}` })
+      }
     } catch {
       res.status(500).send({ auth: false, erro: 'Houve falha na validação.' });
     }
