@@ -9,7 +9,7 @@ router.get('/', verifyJWT, (req, res) => {
     const {usuario, cnpj}  = req.user
     const pool  = new Pool (conn())    
     console.log(usuario)
-    var qry = `select * from slide where empresa='${cnpj}'`
+    var qry = `select * from banners where empresa='${cnpj}'`
     pool
     .query(qry)
     .then(con => {    
@@ -31,12 +31,14 @@ router.post('/', verifyJWT, (req, res) => {
     const pool  = new Pool(conn())     
     let dados = req.body;
     
-    qryText = `insert into slide(
+    qryText = `insert into banners(
       empresa,
-      imagem
+      imagem,
+      grupo
       ) values (
       '${cnpj}'
-      ,'${String(dados.imagem)}')`;
+      ,'${String(dados.imagem)}'
+      ,${dados.grupo})`;
     pool
     .query(qryText)
     .then(() => {
@@ -52,7 +54,7 @@ router.post('/', verifyJWT, (req, res) => {
 router.delete('/', verifyJWT, (req, res) => {    
   const {usuario, cnpj}  = req.user
   const pool  = new Pool (conn())
-  const qryText = `delete from slide where empresa='${cnpj}'`
+  const qryText = `delete from banners where empresa='${cnpj}'`
   pool
     .query(qryText)
     .then(() => {
