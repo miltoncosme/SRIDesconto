@@ -24,8 +24,9 @@ router.get('/', verifyJWT, (req, res) => {
       res.status(500).send({ auth: true, result: false, erro: e })      
     })  
 })
-
   
+
+
 router.post('/', verifyJWT, (req, res) => {
     const {cnpj} = req.user
     const pool  = new Pool(conn())     
@@ -66,7 +67,6 @@ router.delete('/', verifyJWT, (req, res) => {
     
     })
 })
-
 
 
 module.exports = router

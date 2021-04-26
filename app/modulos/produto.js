@@ -106,8 +106,8 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
                     ,b.descricao
                     ,b.preco
                     ,b.promocao
-                    ,b.imagem
                     ,b.validade
+                    ,b.imagem
                      from 
                (select row_number() over (order by a.descricao ) as linha,
                   a.*              
@@ -128,6 +128,27 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
       res.status(500).send({ auth: true, result: false, erro: e })      
     })  
 })
+
+router.get('/imagem/:cod', verifyJWT, (req, res) => {
+  const {usuario, cnpj}  = req.user
+  const pool  = new Pool (conn())    
+  var qry = `select imagem from produtos where empresa='${cnpj}' and cod_produto='${req.params.cod}'`
+  pool
+  .query(qry)
+  .then(con => {    
+    const dados=con.rows
+    dados.forEach(data=>
+      data.imagem=String(data.imagem)
+    )
+    res.status(200).send({ auth: true, result: true, dados })
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })      
+  })  
+})
+
+
 
 
 

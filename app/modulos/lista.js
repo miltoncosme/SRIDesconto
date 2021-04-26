@@ -35,6 +35,31 @@ router.get('/', verifyJWT, (req, res) => {
     })  
 })
 
+router.get('/valorCarrinho', verifyJWT, (req, res) => {
+  const {cpf, cnpj}  = req.user    
+  const pool  = new Pool (conn())  
+  var qry = `select sum(b.preco*a.qtd) as total
+    from cliproduto a ,produtos b
+  where a.cliente ='${cpf}'
+    and a.empresa = '${cnpj}'
+    and a.empresa = b.empresa
+    and a.codproduto = b.cod_produto
+    and b.validade >= current_date`;
+  pool
+  .query(qry)
+  .then(con => {    
+    const dados=con.rows[0]
+    //dados.forEach(data=>
+   //   data.imagem=String(data.imagem)
+   // )
+    res.status(200).send({ auth: true, result: true, dados })
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })      
+  })  
+})
+
 router.get('/semimagem', verifyJWT, (req, res) => {
   const {cpf, cnpj}  = req.user    
   const pool  = new Pool (conn())  
@@ -42,6 +67,7 @@ router.get('/semimagem', verifyJWT, (req, res) => {
   ,b.descricao 
   ,b.preco
   ,b.promocao
+  ,a.qtd
   from cliproduto a ,produtos b
   where a.cliente ='${cpf}'
     and a.empresa = '${cnpj}'
@@ -52,9 +78,7 @@ router.get('/semimagem', verifyJWT, (req, res) => {
   .query(qry)
   .then(con => {    
     const dados=con.rows
-    dados.forEach(data=>
-      data.imagem=String(data.imagem)
-    )
+    
     res.status(200).send({ auth: true, result: true, dados })
   })
   .catch(err => {
