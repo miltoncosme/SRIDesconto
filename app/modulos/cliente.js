@@ -31,7 +31,7 @@ router.get('/lista', verifyJWT, (req, res) => {
   pool
   .query(qry)
   .then(con => {    
-    const dados=con.rows[0]
+    const dados=con.rows
     res.status(200).send({ auth: true, result: true, dados })
   })
   .catch(err => {
