@@ -24,6 +24,23 @@ router.get('/', verifyJWT, (req, res) => {
     })  
 })
 
+router.get('/lista', verifyJWT, (req, res) => {
+  const {cnpj,cpf}  = req.user
+  const pool  = new Pool (conn())    
+  var qry = `select * from cadastro where empresa='${cnpj}'`
+  pool
+  .query(qry)
+  .then(con => {    
+    const dados=con.rows[0]
+    res.status(200).send({ auth: true, result: true, dados })
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })      
+  })  
+})
+
+
 router.post('/', verifyJWT, (req, res) => {
     
     const { cnpj, cpf}  = req.user;
