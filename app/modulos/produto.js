@@ -113,7 +113,7 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
                (select row_number() over (order by a.descricao ) as linha,
                   a.*              
                from produtos a where a.empresa='${cnpj}' order by a.descricao) b
-              where b.linha between ${(1*10)-(10-1)} and ${nPag*pag}
+              where b.linha between ${(nPag*10)-(10-1)} and ${nPag*pag}
               and validade > current_date`
   pool
   .query(qry)
