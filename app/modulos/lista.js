@@ -12,7 +12,7 @@ router.get('/', verifyJWT, (req, res) => {
     ,b.descricao 
     ,b.preco
     ,b.promocao
-    ,b.imagem
+    ,b.imagem_grande as imagem
     ,a.qtd
     from cliproduto a ,produtos b
     where a.cliente ='${cpf}'
