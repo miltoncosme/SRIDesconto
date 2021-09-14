@@ -97,6 +97,7 @@ public/
 # DynamoDB Local files
 .dynamodb/
 
-package-lock.json
+
+app/package-lock.json
 
 # End of https://www.gitignore.io/api/node
