@@ -102,6 +102,14 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
   const pag = Number(req.params.upag);
   const {cnpj}  = req.user;
   const pool  = new Pool (conn());
+  var grupo = (req.body.grupo);
+  var descricao = (req.body.descricao);
+
+  if (grupo.length > 0 ){
+    grupo = 'and cod_grupo = '+grupo;
+  }
+
+ 
   
   var qry =  `select b.cod_produto
                     ,b.descricao
@@ -114,6 +122,8 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
                   a.*              
                from produtos a where a.empresa='${cnpj}' order by a.descricao) b
               where b.linha between ${(pag*10)-(10-1)} and ${nPag*pag}
+              and descricao like '${descricao}'
+              ${grupo}
               and validade > current_date`
   pool
   .query(qry)
@@ -196,6 +206,7 @@ router.post('/', verifyJWT, (req, res) => {
       imagem,
       validade,
       imagem_grande,
+      cod_grupo,
       balanca
       ) values (
       '${cnpj}'
@@ -206,6 +217,7 @@ router.post('/', verifyJWT, (req, res) => {
       ,'${String(dados.imagem)}'
       ,to_date('${String(dados.validade)}','YYYY.MM.DD')
       ,'${String(dados.imagem_grande)}'
+      ,${dados.grupo}
       ,'${dados.balanca}')`;
     pool
     .query(qryText)
