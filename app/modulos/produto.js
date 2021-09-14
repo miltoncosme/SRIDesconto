@@ -102,10 +102,10 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
   const pag = Number(req.params.upag);
   const {cnpj}  = req.user;
   const pool  = new Pool (conn());
-  var grupo = (req.body.grupo);
-  var descricao = (req.body.descricao);
+  var grupo = req.query.grupo || '';
+  var descricao = `%${ req.query.descricao || ''}%`;
 
-  if (grupo.length > 0 ){
+  if (grupo ){
     grupo = 'and cod_grupo = '+grupo;
   }
 
@@ -125,7 +125,8 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
               and descricao like '${descricao}'
               ${grupo}
               and validade > current_date`
-  pool
+            pool
+  
   .query(qry)
     .then(con => {    
       const dados=con.rows
