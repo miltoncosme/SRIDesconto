@@ -108,7 +108,6 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
   if (grupo ){
     grupo = 'and cod_grupo = '+grupo;
   }
-
  
   
   var qry =  `select b.cod_produto
@@ -120,14 +119,14 @@ router.get('/pagina/:upag', verifyJWT, (req, res, next) => {
                      from 
                (select row_number() over (order by a.descricao ) as linha,
                   a.*              
-               from produtos a where a.empresa='${cnpj}' order by a.descricao) b
-              where b.linha between ${(pag*10)-(10-1)} and ${nPag*pag}
-              and descricao like '${descricao}'
-              ${grupo}
-              and validade > current_date`
-            pool
-  
-  .query(qry)
+               from produtos a where a.empresa='${cnpj}' 
+               and descricao like '${descricao}'
+               ${grupo}
+               and validade > current_date
+               order by a.descricao) b
+              where b.linha between ${(pag*nPag)-(nPag-1)} and ${nPag*pag}`             
+                          
+  pool.query(qry)
     .then(con => {    
       const dados=con.rows
       dados.forEach(data=>
@@ -218,7 +217,7 @@ router.post('/', verifyJWT, (req, res) => {
       ,'${String(dados.imagem)}'
       ,to_date('${String(dados.validade)}','YYYY.MM.DD')
       ,'${String(dados.imagem_grande)}'
-      ,${dados.grupo}
+      ,${dados.cod_grupo}
       ,'${dados.balanca}')`;
     pool
     .query(qryText)
