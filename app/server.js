@@ -54,6 +54,7 @@ app.use('/menssagens', require('./modulos/menssagens'));
 app.use('/slide', require('./modulos/slide'));
 app.use('/banners', require('./modulos/banners'));
 app.use('/valorCarrinho', require('./modulos/lista'));
+app.use('/frete', require('./modulos/frete'));
 
 app.use(logger('dev'));
 app.use(helmet());
