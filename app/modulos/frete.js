@@ -4,10 +4,10 @@ const { verifyJWT } = require('../verifyJWT');
 const { Pool } = require('pg');
 const { conn } = require('../db');
 
-router.get('/', verifyJWT, (req, res) => {
+router.get('/:cep', verifyJWT, (req, res) => {
   const {usuario, cnpj}  = req.user
-  const pool  = new Pool (conn())    
-  var qry = `select * from taxa_entrega where empresa='${cnpj}'`
+  const pool  = new Pool (conn())   
+  var qry = `select * from taxa_entrega where empresa='${cnpj}' and cep_inicial <= '${req.params.cep}' and cep_final >= '${req.params.cep}'`
   pool
   .query(qry)
   .then(con => {    
@@ -19,7 +19,24 @@ router.get('/', verifyJWT, (req, res) => {
     res.status(500).send({ auth: true, result: false, erro: e })      
   })  
 })
-  
+
+/*
+router.get('/', verifyJWT, (req, res) => {
+  const {usuario, cnpj}  = req.user
+  const pool  = new Pool (conn())    
+  var qry = `select * from taxa_entrega where empresa='${cnpj}`
+  pool
+  .query(qry)
+  .then(con => {    
+    const dados=con.rows
+    res.status(200).send({ auth: true, result: true, dados })
+  })
+  .catch(err => {
+    const e = err.message
+    res.status(500).send({ auth: true, result: false, erro: e })      
+  })  
+})
+ */  
 
 router.post('/', verifyJWT, (req, res) => {
   const {cnpj} = req.user
