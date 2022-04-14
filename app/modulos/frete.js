@@ -49,14 +49,16 @@ router.post('/', verifyJWT, (req, res) => {
     cep_final,
     frete,
     descricao,
-    cod_produto
+    cod_produto,
+    valor_min
     ) values (
     '${cnpj}'
     ,'${dados.cep_inicial}'
     ,'${dados.cep_final}'
     ,'${dados.frete}'
     ,'${dados.descricao}'
-    ,'${dados.cod_produto}')`;
+    ,'${dados.cod_produto}'
+    ,${dados.valor_min})`;
 
   pool
   .query(qryText)
@@ -76,7 +78,7 @@ router.delete('/', verifyJWT, (req, res) => {
     const {usuario, cnpj}  = req.user
     const pool  = new Pool (conn())
     let dados = req.body;
-    const qryText = `delete from taxa_entrega where empresa='${cnpj}' and id_cep = ${dados.id_cep} `
+    const qryText = `delete from taxa_entrega where empresa='${cnpj}' `
     pool
       .query(qryText)
       .then(() => {

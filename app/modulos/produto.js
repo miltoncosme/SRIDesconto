@@ -159,13 +159,6 @@ router.get('/imagem/:cod', verifyJWT, (req, res) => {
   })  
 })
 
-
-
-
-
-
-
-
 router.post('/msg', verifyJWT, (req, res) => {
   const {cnpj} = req.user
   const pool  = new Pool(conn())     
@@ -230,7 +223,6 @@ router.post('/', verifyJWT, (req, res) => {
       res.status(500).send({ auth: true, result: false, erro: e })
   })           
 })
-
 
 
 router.delete('/', verifyJWT, (req, res) => {    
